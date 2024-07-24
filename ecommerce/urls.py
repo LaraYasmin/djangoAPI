@@ -1,8 +1,8 @@
 from django.urls import path
 from .views.login import Login
-from .views.orders import Orders
-from .views.home import Home
-from .views.signup import Signup
+# from .views.orders import Orders
+# from .views.home import Home
+# from .views.signup import Signup
 
 urlpatterns = [
     # path('home/', home.as_view(), name='home'),
