@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf.urls.static import static 
-from . import settings 
+from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('ecommerce.urls'))
+    path('api/token/', TokenObtainPairView.as_view(), name='token_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('', include('ecommerce.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
