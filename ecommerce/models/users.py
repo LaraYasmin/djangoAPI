@@ -10,13 +10,13 @@ class User(models.Model):
         return self.save()
     
     @staticmethod
-    def get_user_by_email():
+    def check_user_by_email():
         try:
             return User.objects.get(email=email)
         except:
             return f"User not found"
 
-    def if_user_exists(self):
+    def user_exists(self):
         if User.objects.filter(email=self.email):
             return True
         return False
