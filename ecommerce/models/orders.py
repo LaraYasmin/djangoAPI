@@ -6,8 +6,19 @@ class Order(models.Model):
     quantity = models.IntegerField()
     status = models.BooleanField()
     
-    def sendOrder(self):
-        return self.save()
+    def verify_order(self):
+        if self.quantity <= 0:
+            raise ValueError("Invalid quantity")
+        if not self.product_id:
+            raise ValueError("Invalid product")
+        
+    def save(self, *args, **kwargs):
+        self.verify_order()
+        super().save(*args, **kwargs)
+        
+    @staticmethod
+    def get_all_orders():
+        return Order.objects.all()
     
     @staticmethod
     def get_order_by_user(user_id):

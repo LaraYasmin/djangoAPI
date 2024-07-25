@@ -6,11 +6,28 @@ from rest_framework import status
 
 class Order(APIView):
     def get(self, request):
-        orders = Order.get_order_by_user(request.user_id)
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            orders = Order.get_order_by_user(request.user_id)
+            serializer = OrderSerializer(orders, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response({"error": "Error to get user orders"}, status=status.HTTP_404_NOT_FOUND)
     
     def post(self, request):
-        send_order = Order.sendOrder(request.data)
-        serializer = OrderSerializer(send_order, many=False)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            serializer = OrderSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except:
+            return Response({"error": "Error to send order"}, status=status.HTTP_400_BAD_REQUEST)
+
+class OrderAll(APIView):
+        def get(self, request):
+            try:
+                orders = Order.get_all_orders()
+                serializer = OrderSerializer(orders, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except:
+                return Response({"error": "Error to get orders"}, status=status.HTTP_404_NOT_FOUND)
+            

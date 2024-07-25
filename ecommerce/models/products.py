@@ -1,9 +1,11 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from ecommerce.models.categories import Categorie
 
 class Product(models.Model):
     product_name = models.CharField(max_length=255)
     value_product = models.DecimalField(max_digits=10, decimal_places=2)
-    image_product = models.ImageField(upload_to='uploads/products/')
+    image_product = models.ImageField(upload_to='products/details/')
     description_product = models.TextField(max_length=255, default='', blank=False)
     category_id = models.ForeignKey("Categorie", on_delete=models.CASCADE, default=1)
 
@@ -24,6 +26,11 @@ class Product(models.Model):
     @staticmethod
     def post_new_product(product_name, value_product, image_product, description_product, category_id):
         if all([product_name, value_product, image_product, description_product, category_id]):
+            try:
+                category_id = Categorie.objects.get(id=category_id)
+            except Categorie.DoesNotExist:
+                raise ValidationError("Category does not exist")
+            
             return Product.objects.create(
                 product_name=product_name, 
                 value_product=value_product, 
@@ -31,7 +38,7 @@ class Product(models.Model):
                 description_product=description_product, 
                 category_id=category_id
             )
-        return "Fill all the fields"
+        raise ValidationError("Fill all the fields")
     
     @staticmethod
     def delete_product(product_id):
