@@ -12,10 +12,6 @@ class Order(models.Model):
     @staticmethod
     def get_order_by_user(user_id):
         return Order.objects.filter(user=user_id).order_by('-date')
-    
-    @staticmethod
-    def get_all_orders():
-        return Order.objects.all()
         
     def __str__(self):
         return f"{self.user_id} ({self.product_id})"
