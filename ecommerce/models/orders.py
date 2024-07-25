@@ -22,7 +22,7 @@ class Order(models.Model):
     
     @staticmethod
     def get_order_by_user(user_id):
-        return Order.objects.filter(user=user_id).order_by('-date')
+        return Order.objects.filter(user_id=user_id)
         
     def __str__(self):
         return f"{self.user_id} ({self.product_id})"

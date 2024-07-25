@@ -16,7 +16,7 @@ class Login(APIView):
             'auth': str(request.auth),  
         }
         return Response(content, status=status.HTTP_200_OK)
-    
+
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')

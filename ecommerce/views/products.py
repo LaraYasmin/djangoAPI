@@ -17,7 +17,6 @@ class Products(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ProductDetail(APIView):
-    permission_classes = [AllowAny]
     def post(self, request):
         product_name = request.data.get('product_name')
         value_product = request.data.get('value_product')
@@ -38,18 +37,11 @@ class ProductDetail(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response({"error": "Fill all the fields"}, status=status.HTTP_400_BAD_REQUEST)
         
-    def delete(self, request):
-        try:
-            id = request.data.get('id')
-            deleted_product = Product.delete_product(id)
-            return Response(deleted_product, status=status.HTTP_204_NO_CONTENT) 
-        except:
-            return Response({"error": "Error to delete product"}, status=status.HTTP_404_NOT_FOUND)
-    
-    def put(self, request):
+class ProductUpdate(APIView):
+    def put(self, request, id):
         product_name = request.data.get('product_name')
         value_product = request.data.get('value_product')
-        image_product = request.Files.get('image_product')
+        image_product = request.FILES.get('image_product')
         description_product = request.data.get('description_product')
         category_id = request.data.get('category_id')
         
@@ -62,5 +54,15 @@ class ProductDetail(APIView):
                 description_product=description_product,
                 category_id=category_id
             )
-            return Response(updated_product, status=status.HTTP_200_OK)
+            
+            serializer = ProductSerializers(updated_product)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({"error": "Error to update product"}, status=status.HTTP_400_BAD_REQUEST)
+
+class ProductDelete(APIView):
+    def delete(self, request, id):
+        try:
+            Product.delete_product(id)
+            return Response(status=status.HTTP_204_NO_CONTENT) 
+        except Product.DoesNotExist:
+            return Response({"error": "Error to delete product"}, status=status.HTTP_404_NOT_FOUND)
