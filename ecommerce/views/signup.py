@@ -1,4 +1,4 @@
-from ..models.users import User
+from ..models.users import UserInfo
 from ..serializers.userSerializer import UserSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,10 +16,10 @@ class Signup(APIView):
         if not email or not password or not name:
             return Response({"error": "Name, email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        if User.objects.filter(email=email).exists():
+        if UserInfo.objects.filter(email=email).exists():
             return Response({"error": "User already exists"}, status=status.HTTP_409_CONFLICT)
         
-        user = User(name=name, email=email, password=password)
+        user = UserInfo(name=name, email=email, password=password)
         user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -1,7 +1,7 @@
 from django.db import models
 
 class Order(models.Model):
-    user_id = models.ForeignKey("User", on_delete=models.CASCADE, default=1)
+    user_id = models.ForeignKey("UserInfo", on_delete=models.CASCADE, default=1)
     product_id = models.ForeignKey("Product", on_delete=models.CASCADE, default=1)
     quantity = models.IntegerField()
     status = models.BooleanField()
